@@ -29,6 +29,8 @@ func InitDb() {
 		},
 	})
 
+	fmt.Println("dsn:" + dsn)
+
 	if err != nil {
 		fmt.Println("数据库连接错误")
 	}

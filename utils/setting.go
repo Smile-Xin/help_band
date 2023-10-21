@@ -14,7 +14,7 @@ var (
 	DbName     string
 )
 
-func Init() {
+func init() {
 	file, err := ini.Load("config/config.ini")
 	if err != nil {
 		fmt.Println("配置文件出错")
