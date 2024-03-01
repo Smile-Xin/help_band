@@ -39,6 +39,7 @@ func InitDb() {
 
 	if err != nil {
 		fmt.Println("连接池错误")
+		return
 	}
 	// SetMaxIdleConns 设置空闲连接池中连接的最大数量
 	sqlDB.SetMaxIdleConns(10)
@@ -50,6 +51,6 @@ func InitDb() {
 	sqlDB.SetConnMaxLifetime(10 * time.Second)
 
 	// 迁移 schema
-	db.AutoMigrate(&model.User{}, &model.Task{}, &model.TaskComment{})
+	_ = db.AutoMigrate(&model.User{}, &model.Task{}, &model.TaskComment{})
 
 }

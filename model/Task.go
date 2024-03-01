@@ -12,5 +12,5 @@ type Task struct {
 	DemanderId  uint   `gorm:"type:int;not null" json:"demander_id"`   //提出问题者
 	RecipientId uint   `gorm:"type:int;not null" json:"recipient_id"`  //接受问题者
 	Status      int8   `gorm:"type:tinyint;default:0" json:"status"`   //任务当前状态：0：发布未被接受 1：被接受 2：已完成未评论 3：已评论
-
+	//relate      int8
 }
