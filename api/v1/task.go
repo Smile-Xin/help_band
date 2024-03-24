@@ -27,13 +27,27 @@ func QueryTaskByTag(c *gin.Context) {
 
 // GetAll 获取全部任务
 func GetAll(c *gin.Context) {
-	taskList, code := dao.GetAll()
+	pageSize, _ := strconv.Atoi(c.Param("pageSize"))
+	pageNum, _ := strconv.Atoi(c.Param("pageNum"))
+	taskList, total, code := dao.GetAll(pageSize, pageNum)
 	c.JSON(200, gin.H{
 		"state":   code,
 		"data":    taskList,
+		"total":   total,
 		"message": errmsg.GetErrMsg(code),
 	})
 
+}
+
+// QueryTaskByID 根据id查询任务
+func QueryTaskByID(c *gin.Context) {
+	id, _ := strconv.Atoi(c.Param("id"))
+	task, code := dao.QueryTaskByID(id)
+	c.JSON(200, gin.H{
+		"state":   code,
+		"data":    task,
+		"message": errmsg.GetErrMsg(code),
+	})
 }
 
 // AddTask 添加任务

@@ -2,6 +2,7 @@ package routes
 
 import (
 	"backend/api/v1"
+	"backend/middleware"
 	"backend/utils"
 	"github.com/gin-gonic/gin"
 )
@@ -11,6 +12,7 @@ func InitRouter() {
 	gin.SetMode(utils.AppMode)
 	//创建新的router
 	router := gin.New()
+	router.Use(middleware.Cors())
 
 	group1 := router.Group("api/v1")
 	{
@@ -27,10 +29,12 @@ func InitRouter() {
 		group1.DELETE("user/DeleteUser/:name", v1.DeleteUser)
 
 		// task业务
-		// 获取全部任务
-		group1.GET("task/GetAll", v1.GetAll)
+		// 获取全部任务 有分页查询 pageSize:每页数量 pageNum:页码
+		group1.GET("task/GetAll/:pageSize/:pageNum", v1.GetAll)
 		// 根据tag查询任务 有分页查询
 		group1.GET("task/QueryTaskByTage/:pageSize/:pageNum/:tag", v1.QueryTaskByTag)
+		// 根据id查询任务
+		group1.GET("task/QueryTaskByID/:id", v1.QueryTaskByID)
 		// 添加任务
 		group1.POST("task/AddTask", v1.AddTask)
 		// 修改任务

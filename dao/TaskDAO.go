@@ -17,8 +17,6 @@ func ExistTaskById(id uint) bool {
 	}
 }
 
-// ExistTaskById 判断任务是否存在
-
 // QueryTaskByTag 查询任务列表
 /*
 pageSize: 每页数量	pageNum: 页码	tag: 关键词
@@ -34,7 +32,7 @@ func QueryTaskByTag(pageSize int, pageNum int, tag string) (taskList []model.Tas
 			return
 		}
 		// 查询
-		err = db.Where("tag like ?", "%"+tag+"%").Limit(pageSize).Offset((pageNum - 1) * pageSize).Find(&taskList).Error
+		err = db.Where("tag like ?", "%"+tag+"%").Limit(pageSize).Offset((pageNum - 1) * pageSize).Order("created_at desc").Find(&taskList).Error
 		if err != nil {
 			fmt.Printf("query task fail: %s", err)
 			code = errmsg.DATABASE_WRITE_FAIL
@@ -49,7 +47,7 @@ func QueryTaskByTag(pageSize int, pageNum int, tag string) (taskList []model.Tas
 			return
 		}
 		// 没有关键词查询
-		err = db.Limit(pageSize).Offset((pageNum - 1) * pageSize).Find(&taskList).Error
+		err = db.Limit(pageSize).Offset((pageNum - 1) * pageSize).Order("created_at desc").Find(&taskList).Error
 		if err != nil {
 			fmt.Printf("query task fail: %s", err)
 			code = errmsg.DATABASE_WRITE_FAIL
@@ -61,15 +59,40 @@ func QueryTaskByTag(pageSize int, pageNum int, tag string) (taskList []model.Tas
 }
 
 // GetAll 获取全部任务
-func GetAll() (taskList []model.Task, code uint) {
-	err := db.Find(&taskList).Error
+func GetAll(pageSize int, pageNum int) (taskList []model.Task, total int64, code uint) {
+	// 没有关键词的总人数
+	err := db.Find(&taskList).Count(&total).Error
 	if err != nil {
-		fmt.Printf("get all task fail: %s", err)
+		fmt.Printf("get task total fail: %s", err)
+		code = errmsg.DATABASE_WRITE_FAIL
+		return
+	}
+	// 没有关键词查询
+	err = db.Limit(pageSize).Offset((pageNum - 1) * pageSize).Order("created_at desc").Find(&taskList).Error
+	if err != nil {
+		fmt.Printf("query task fail: %s", err)
 		code = errmsg.DATABASE_WRITE_FAIL
 		return
 	}
 	code = errmsg.SUCCESS
 	return
+}
+
+// QueryTaskByID 根据id查询任务
+func QueryTaskByID(id int) (task model.Task, code uint) {
+	if ExistTaskCommentByID(id) {
+		code = errmsg.TASK_NOT_EXIST
+		return
+	}
+	err := db.Where("id = ?", id).Find(&task).Error
+	if err != nil {
+		fmt.Printf("query task fail: %s", err)
+		code = errmsg.DATABASE_WRITE_FAIL
+		return
+	}
+	code = errmsg.SUCCESS
+	return
+
 }
 
 // AddTask 添加任务
