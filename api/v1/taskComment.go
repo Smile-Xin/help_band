@@ -4,6 +4,7 @@ import (
 	"backend/dao"
 	"backend/model"
 	"backend/utils/errmsg"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"strconv"
 )
@@ -12,6 +13,7 @@ import (
 func AddTaskComment(c *gin.Context) {
 	var taskComment model.TaskComment
 	_ = c.ShouldBindJSON(&taskComment)
+	fmt.Println(taskComment)
 	code := dao.AddTaskComment(&taskComment)
 	c.JSON(200, gin.H{
 		"state":   code,

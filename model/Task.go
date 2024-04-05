@@ -14,6 +14,7 @@ type Task struct {
 	DemanderName  string `gorm:"type:varchar(64)" json:"demander_name"`  //提出问题者
 	RecipientId   uint   `gorm:"type:int" json:"recipient_id"`           //接受问题者
 	RecipientName string `gorm:"type:varchar(64)" json:"recipient_name"` //接受问题者
-	Status        int8   `gorm:"type:tinyint;default:0" json:"status"`   //任务当前状态：0：发布未被接受 1：被接受 2：已完成未评论 3：已评论 -1：已取消
+	Status        int8   `gorm:"type:tinyint;default:0" json:"status"`   //任务当前状态：0：发布未被接受 1：被接受 2：提交文件 3：已完成 4：已评论 5：被退回 6：已重新提交文件 -1：已取消
+	Article       string `gorm:"type:varchar(64)" json:"article"`        //文章链接
 	//relate      int8
 }

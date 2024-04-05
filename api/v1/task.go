@@ -50,6 +50,53 @@ func QueryTaskByID(c *gin.Context) {
 	})
 }
 
+// QueryTaskByUserIdStatus 根据id和状态查询任务
+func QueryTaskByUserIdStatus(c *gin.Context) {
+	pageSize, _ := strconv.Atoi(c.Param("pageSize"))
+	pageNum, _ := strconv.Atoi(c.Param("pageNum"))
+	userName := c.Param("userName")
+	status, _ := strconv.Atoi(c.Param("status"))
+	title := c.Query("title")
+	taskList, total, code := dao.QueryTaskByUserIdStatus(pageSize, pageNum, userName, status, title)
+	c.JSON(200, gin.H{
+		"state":   code,
+		"data":    taskList,
+		"total":   total,
+		"message": errmsg.GetErrMsg(code),
+	})
+}
+
+// QueryTaskByDemander 根据提出问题者查询任务
+func QueryTaskByDemander(c *gin.Context) {
+	pageSize, _ := strconv.Atoi(c.Param("pageSize"))
+	pageNum, _ := strconv.Atoi(c.Param("pageNum"))
+	demander := c.Param("demander")
+	title := c.Query("title")
+	taskList, total, code := dao.QueryTaskByDemander(pageSize, pageNum, demander, title)
+	c.JSON(200, gin.H{
+		"state":   code,
+		"data":    taskList,
+		"total":   total,
+		"message": errmsg.GetErrMsg(code),
+	})
+}
+
+// QueryTaskByReceiver 根据接受者查询任务
+func QueryTaskByReceiver(c *gin.Context) {
+	pageSize, _ := strconv.Atoi(c.Param("pageSize"))
+	pageNum, _ := strconv.Atoi(c.Param("pageNum"))
+	recipient_name := c.Param("recipient")
+	title := c.Query("title")
+	taskList, total, code := dao.QueryTaskByReceiver(pageSize, pageNum, recipient_name, title)
+	c.JSON(200, gin.H{
+		"state":   code,
+		"data":    taskList,
+		"total":   total,
+		"message": errmsg.GetErrMsg(code),
+	})
+
+}
+
 // AddTask 添加任务
 func AddTask(c *gin.Context) {
 	var task model.Task

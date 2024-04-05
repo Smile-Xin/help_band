@@ -2,10 +2,12 @@ package v1
 
 import (
 	"backend/dao"
+	"backend/middleware"
 	"backend/model"
 	"backend/utils/errmsg"
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"time"
 )
 
 // QueryUserByName 查询用户
@@ -42,7 +44,7 @@ func AddUser(c *gin.Context) {
 	// 调用dao层添加用户
 	code := dao.AddUser(&user)
 	c.JSON(200, gin.H{
-		"stats":   code,
+		"state":   code,
 		"message": errmsg.GetErrMsg(code),
 	})
 }
@@ -59,7 +61,7 @@ func EditUser(c *gin.Context) {
 	// 调用dao层修改用户
 	code := dao.EditUser(&user)
 	c.JSON(200, gin.H{
-		"stats":   code,
+		"state":   code,
 		"message": errmsg.GetErrMsg(code),
 	})
 }
@@ -69,7 +71,32 @@ func DeleteUser(c *gin.Context) {
 	userName := c.Param("name")
 	code := dao.DeleteUser(userName)
 	c.JSON(200, gin.H{
-		"stats":   code,
+		"state":   code,
+		"message": errmsg.GetErrMsg(code),
+	})
+}
+
+// Login 登录
+func Login(c *gin.Context) {
+	var user model.User
+	_ = c.ShouldBindJSON(&user)
+	// 调用dao层登录
+	u, code := dao.Login(&user)
+	// 判断是否登录成功
+	if code != errmsg.SUCCESS {
+		c.JSON(200, gin.H{
+			"state":   code,
+			"message": errmsg.GetErrMsg(code),
+		})
+		return
+	}
+	// 登录成功，生成token
+	token, code := middleware.JwtGenerateToken(user.UserName, time.Hour*7*24)
+	c.JSON(200, gin.H{
+		"state":   code,
+		"token":   token,
+		"name":    u.UserName,
+		"id":      u.ID,
 		"message": errmsg.GetErrMsg(code),
 	})
 }

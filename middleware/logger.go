@@ -11,7 +11,7 @@ import (
 )
 
 func Logger() gin.HandlerFunc {
-	filePath := "log/logrus.log"
+	filePath := "log/logs.log"
 	logger := logrus.New()
 	file, err := os.OpenFile(filePath, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0075)
 	if err != nil {

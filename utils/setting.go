@@ -8,6 +8,7 @@ import (
 var (
 	AppMode  string
 	HttpPort string
+	JwtKey   string
 
 	Db         string
 	DbPort     string
@@ -15,6 +16,16 @@ var (
 	DbPassWord string
 	DbHost     string
 	DbName     string
+
+	AccessKey  string
+	SecretKey  string
+	Bucket     string
+	QiniuSever string
+
+	AccessKeyId     string
+	AccessKeySecret string
+	BucketName      string
+	Endpoint        string
 )
 
 func init() {
@@ -25,12 +36,13 @@ func init() {
 
 	LoadData(file)
 	LoadServer(file)
-
+	LoadQiuniu(file)
 }
 
 func LoadServer(file *ini.File) {
 	AppMode = file.Section("server").Key("AppMode").MustString("debug")
 	HttpPort = file.Section("server").Key("HttpPort").MustString(":3001")
+	JwtKey = file.Section("server").Key("JwtKey").MustString("lxc")
 }
 
 func LoadData(file *ini.File) {
@@ -40,4 +52,18 @@ func LoadData(file *ini.File) {
 	DbPassWord = file.Section("database").Key("DbPassWord").MustString("236753")
 	DbHost = file.Section("database").Key("DbHost").MustString("localhost")
 	DbName = file.Section("database").Key("DbName").MustString("help_band01")
+}
+
+func LoadQiuniu(file *ini.File) {
+	AccessKey = file.Section("qiniu").Key("AccessKey").String()
+	SecretKey = file.Section("qiniu").Key("SecretKey").String()
+	Bucket = file.Section("qiniu").Key("Bucket").String()
+	QiniuSever = file.Section("qiniu").Key("QiniuSever").String()
+}
+
+func LoadAli(file *ini.File) {
+	AccessKeyId = file.Section("ali").Key("AccessKeyId").String()
+	AccessKeySecret = file.Section("ali").Key("AccessKeySecret").String()
+	BucketName = file.Section("ali").Key("BucketName").String()
+	Endpoint = file.Section("ali").Key("Endpoint").String()
 }

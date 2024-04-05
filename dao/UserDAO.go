@@ -2,6 +2,7 @@ package dao
 
 import (
 	. "backend/model"
+	"backend/utils"
 	"backend/utils/errmsg"
 	"fmt"
 )
@@ -13,7 +14,7 @@ func ExistUser(userName string) bool {
 	if result.Error != nil {
 		fmt.Printf("find user false %s", result.Error)
 	}
-	fmt.Printf("ExistUser name %s", user.UserName)
+	//fmt.Printf("ExistUser name %s", user.UserName)
 	if user.ID > 0 {
 		return true
 	} else {
@@ -106,4 +107,50 @@ func DeleteUser(name string) (code uint) {
 		code = errmsg.SUCCESS
 	}
 	return
+}
+
+// Login 登录
+func Login(user *User) (u User, code uint) {
+	if !ExistUser(user.UserName) {
+		code = errmsg.INEXISTENCE_USER
+		return
+	}
+	result := db.Where("user_name = ?", user.UserName).First(&u)
+	// 数据库错误
+	if result.Error != nil {
+		code = errmsg.DATABASE_WRITE_FAIL
+		return
+	}
+	// 用户不存在
+	if u.ID == 0 {
+		code = errmsg.INEXISTENCE_USER
+		return
+	}
+
+	// 密码加密
+	Password, _ := utils.ScryptPW(user.Password)
+	// 密码错误
+	//fmt.Printf("u.Password=%s, Password=%s", u.Password, Password)
+	if u.Password != Password {
+		code = errmsg.ERROR_PASSWORD
+		return
+	}
+	// 清空密码
+	u.Password = ""
+
+	code = errmsg.SUCCESS
+	return
+}
+
+// ExamineRole 检查用户权限
+func ExamineRole(name string, role uint) bool {
+	var user User
+	db.Where("user_name = ?", name).First(&user)
+	if user.ID == 0 {
+		return false
+	}
+	if user.Role >= role {
+		return true
+	}
+	return false
 }
