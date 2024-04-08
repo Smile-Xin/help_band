@@ -19,6 +19,14 @@ const (
 	// TaskComment错误代码
 	TASK_COMMENT_NOT_EXIST = 3001 // 任务评论不存在
 
+	// article 业务代码
+	EXIST_ARTICLE       = 6001 // EXIST_ARTICLE 已存在
+	INEXISTENCE_ARTICLE = 6002 // INEXISTENCE_ARTICLE 不存在
+
+	// category 业务代码
+	EXIST_CATEGORY       = 7001 // EXIST_CATEGORY 已存在分类
+	INEXISTENCE_CATEGORY = 7002 // INEXISTENCE_CATEGORY 不存在分类
+
 	// DATABASE_WRITE_FAIL 操作数据库错误
 	DATABASE_WRITE_FAIL = 4396
 
@@ -47,6 +55,14 @@ var codemsg = map[uint]string{
 
 	// TaskComment
 	TASK_COMMENT_NOT_EXIST: "任务评论不存在", // 3001
+
+	// Article
+	EXIST_ARTICLE:       "文章已存在", // 6001
+	INEXISTENCE_ARTICLE: "文章不存在", // 6002
+
+	// Category
+	EXIST_CATEGORY:       "分类已存在", // 7001
+	INEXISTENCE_CATEGORY: "分类不存在", // 7002
 
 	DATABASE_WRITE_FAIL: "数据库操作错误", // 4396
 

@@ -81,6 +81,40 @@ func Upload(file multipart.File, fileHeader *multipart.FileHeader, taskId string
 	return url, errmsg.SUCCESS
 }
 
+func Upload1(file multipart.File, fileHeader *multipart.FileHeader, key string) (url string, code uint) {
+	// 获取uptoken 可以上传的凭证
+	policy := storage.PutPolicy{
+		//Scope: fmt.Sprintf("%s:%s", Bucket, fileHeader.Filename),
+		//Scope:   Bucket + ":" + taskId + "/" + fileHeader.Filename,
+		Scope:   Bucket,
+		SaveKey: key + "/" + fileHeader.Filename,
+	}
+	fmt.Println(Accesskey, SecretKey)
+	mac := qbox.NewMac(Accesskey, SecretKey)
+	upToken := policy.UploadToken(mac)
+
+	// 获取formuploader
+	config := storage.Config{
+		Zone:          &storage.ZoneHuabei,
+		UseCdnDomains: false,
+		UseHTTPS:      false,
+	}
+	formUpLoader := storage.NewFormUploader(&config)
+
+	// 上传文件
+	extra := storage.PutExtra{}
+	ret := storage.PutRet{}
+	err := formUpLoader.PutWithoutKey(context.Background(), &ret, upToken, file, fileHeader.Size, &extra)
+	if err != nil {
+		fmt.Printf("七牛上传文件失败:%s", err)
+		return "", errmsg.QN_UPLOAD_ERROR
+	}
+	// 上传成功后返回文件的url
+	url = QiniuSever + ret.Key
+	code = errmsg.SUCCESS
+	return
+}
+
 func UploadAli(file multipart.File, fileName string) (code uint, url string) {
 	// 创建OSSClient实例。
 	client, err := oss.New(Endpoint, AccessKeyId, AccessKeySecret)

@@ -24,8 +24,12 @@ func ExistUser(userName string) bool {
 
 // QueryUserByName 用name查user，非模糊查询
 func QueryUserByName(name string) (user User, code uint) {
+	// 计算用户评分
+	db.Model(&User{}).Where("user_name = ?", name).Update("score",
+		db.Table("task_comment").Select("AVG(score)").Where(map[string]interface{}{"receiver_name": name}).Not(map[string]interface{}{"score": 0}),
+	)
 	code = errmsg.SUCCESS
-	result := db.Where("user_name = ?", name).Find(&user)
+	result := db.Preload("Profile").Where("user_name = ?", name).Find(&user)
 	if result.Error != nil {
 		code = errmsg.DATABASE_WRITE_FAIL
 		return
@@ -55,12 +59,22 @@ func AddUser(user *User) (code uint) {
 	if ExistUser(user.UserName) {
 		code = errmsg.EXIST_USER
 	} else {
+		var profile Profile
+		profile.Name = user.UserName
+		err = db.Create(&profile).Error
+		if err != nil {
+			fmt.Printf("creat profile fail %s", err)
+			code = errmsg.DATABASE_WRITE_FAIL
+			return
+		}
+		user.Pid = profile.ID
 		err := db.Create(&user).Error
 		if err != nil {
 			fmt.Printf("creat user fail %s", err)
 			code = errmsg.DATABASE_WRITE_FAIL
 			return
 		}
+
 		code = errmsg.SUCCESS
 	}
 

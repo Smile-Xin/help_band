@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 	"gorm.io/gorm/schema"
 	"time"
 )
@@ -23,6 +24,9 @@ func InitDb() {
 		utils.DbPort,
 		utils.DbName)
 	db, err = gorm.Open(mysql.New(mysql.Config{DSN: dsn}), &gorm.Config{
+		// 打印日志
+		Logger: logger.Default.LogMode(logger.Info),
+
 		NamingStrategy: schema.NamingStrategy{
 			// 禁用自动变复数
 			SingularTable: true,
@@ -51,6 +55,15 @@ func InitDb() {
 	sqlDB.SetConnMaxLifetime(10 * time.Second)
 
 	// 迁移 schema
-	_ = db.AutoMigrate(&model.User{}, &model.Task{}, &model.TaskComment{})
+	_ = db.AutoMigrate(
+		&model.User{},
+		&model.Task{},
+		&model.TaskComment{},
+		&model.Article{},
+		&model.Category{},
+		&model.Profile{},
+		&model.Message{},
+		&model.Letter{},
+	)
 
 }

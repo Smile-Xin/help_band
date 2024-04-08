@@ -43,6 +43,14 @@ func InitRouter() {
 		group1.GET("taskComment/QueryCommentByTaskID/:taskID", v1.QueryTaskCommentByTaskID)
 		// 根据Receiver（被评论者）查询评论
 		group1.GET("taskComment/QueryCommentByReceiver/:receiver", v1.QueryTaskCommentByReceiver)
+
+		// article业务
+		group1.GET("article/query", v1.QueryArticle)
+		group1.GET("article/list", v1.QueryArtList)
+		group1.GET("article/get", v1.GetArticle)
+		// category业务
+		group1.GET("category/get", v1.GetCategory)
+		group1.GET("category/query", v1.QueryCategory)
 	}
 	group2 := router.Group("api/v1", middleware.JwtToken())
 	{
@@ -71,8 +79,45 @@ func InitRouter() {
 		// 删除评论
 		group2.DELETE("taskComment/DeleteTaskComment/:id", v1.DeleteTaskComment)
 
+		// article业务
+		//auth.GET("article/query", v1.QueryArticle)
+		//auth.GET("article/list", v1.QueryArtList)
+		//auth.GET("article/get", v1.GetArticle)
+		group2.POST("article/add", v1.AddArticle)
+		group2.POST("article/edit", v1.EditArticle)
+		group2.DELETE("article/delete", v1.DeleteArticle)
+
+		// category业务
+		//auth.GET("category/get", v1.GetCategory)
+		//auth.GET("category/query", v1.QueryCategory)
+		group2.POST("category/add", v1.AddCategory)
+		group2.POST("category/edit", v1.EditCategory)
+		group2.DELETE("category/delete", v1.DeleteCategory)
+
+		// profile 业务
+		//auth.GET("profile/:id", v1.GetProfile)
+		group2.POST("profile/edit/:id", v1.EditProfile)
+		group2.GET("admin/profile/:id", v1.GetProfile)
+
+		// 私信业务
+		// 添加私信
+		group2.POST("message/AddMessage", v1.AddMessage)
+		// 查询私信
+		group2.GET("message/QueryMessage/:lid", v1.QueryMessage)
+
+		// 添加对话
+		group2.POST("letter/AddLetter", v1.AddLetter)
+		// 根据userId查询对话
+		group2.GET("letter/QueryLetterByUserId/:userId", v1.QueryLetterByUserId)
+		// 根据两个userId查对话
+		group2.GET("letter/QueryLetterByTwoUserId/:userId1/:userId2", v1.QueryLetterByTwoUserId)
+		// 根据uid查询对话
+		group2.GET("letter/QueryLetterByUid/:uid", v1.QueryLetterByUid)
+
 		// 文件上传
 		group2.POST("qiniu/upload/:taskId", v1.Upload)
+		group2.POST("qiniu/uploadAvatar/:userName", v1.UploadAvatar)
+
 	}
 	_ = router.Run(utils.HttpPort)
 }
