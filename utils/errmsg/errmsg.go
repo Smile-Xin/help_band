@@ -27,6 +27,14 @@ const (
 	EXIST_CATEGORY       = 7001 // EXIST_CATEGORY 已存在分类
 	INEXISTENCE_CATEGORY = 7002 // INEXISTENCE_CATEGORY 不存在分类
 
+	// letter 业务代码
+	LETTER_EXIST     = 8001 // 信件已存在
+	LETTER_NOT_EXIST = 8002 // 信件不存在
+	LETTER_USER_SAME = 8003 // 信件用户相同
+
+	// Message 业务代码
+	MESSAGE_EXIST = 9001 // 留言已存在
+
 	// DATABASE_WRITE_FAIL 操作数据库错误
 	DATABASE_WRITE_FAIL = 4396
 
@@ -63,6 +71,13 @@ var codemsg = map[uint]string{
 	// Category
 	EXIST_CATEGORY:       "分类已存在", // 7001
 	INEXISTENCE_CATEGORY: "分类不存在", // 7002
+
+	// Letter
+	LETTER_EXIST:     "信件已存在",  // 8001
+	LETTER_NOT_EXIST: "信件不存在",  // 8002
+	LETTER_USER_SAME: "信件用户相同", // 8003
+	// Message
+	MESSAGE_EXIST: "留言已存在", // 9001
 
 	DATABASE_WRITE_FAIL: "数据库操作错误", // 4396
 

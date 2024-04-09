@@ -61,6 +61,8 @@ func InitRouter() {
 		group2.POST("user/EditUser", v1.EditUser)
 		// 删除用户
 		group2.DELETE("user/DeleteUser/:name", v1.DeleteUser)
+		// 获取用户头像
+		group2.GET("user/GetAvatar/:id", v1.GetAvatar)
 
 		// task业务
 
@@ -104,6 +106,8 @@ func InitRouter() {
 		group2.POST("message/AddMessage", v1.AddMessage)
 		// 查询私信
 		group2.GET("message/QueryMessage/:lid", v1.QueryMessage)
+		// 根据两个userId查message
+		group2.GET("letter/QueryMessageByTwoUserId/:userId1/:userId2", v1.QueryMessageByTwoUserId)
 
 		// 添加对话
 		group2.POST("letter/AddLetter", v1.AddLetter)
@@ -113,6 +117,8 @@ func InitRouter() {
 		group2.GET("letter/QueryLetterByTwoUserId/:userId1/:userId2", v1.QueryLetterByTwoUserId)
 		// 根据uid查询对话
 		group2.GET("letter/QueryLetterByUid/:uid", v1.QueryLetterByUid)
+		// 根据id查询对话
+		group2.GET("letter/QueryLetterById/:id", v1.QueryLetterById)
 
 		// 文件上传
 		group2.POST("qiniu/upload/:taskId", v1.Upload)

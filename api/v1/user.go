@@ -7,6 +7,7 @@ import (
 	"backend/utils/errmsg"
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"strconv"
 	"time"
 )
 
@@ -97,6 +98,17 @@ func Login(c *gin.Context) {
 		"token":   token,
 		"name":    u.UserName,
 		"id":      u.ID,
+		"message": errmsg.GetErrMsg(code),
+	})
+}
+
+// GetAvatar 获取头像
+func GetAvatar(c *gin.Context) {
+	id, _ := strconv.Atoi(c.Param("id"))
+	code, avatar := dao.GetAvatar(uint(id))
+	c.JSON(200, gin.H{
+		"state":   code,
+		"data":    avatar,
 		"message": errmsg.GetErrMsg(code),
 	})
 }

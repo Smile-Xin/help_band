@@ -14,6 +14,7 @@ import (
 func AddLetter(c *gin.Context) {
 	var letter model.Letter
 	err := c.ShouldBindJSON(&letter)
+	fmt.Println("AddLetter", letter)
 	if err != nil {
 		fmt.Printf("bind letter fail:%s", err)
 		return
@@ -39,9 +40,10 @@ func QueryLetterByUid(c *gin.Context) {
 
 // QueryLetterByTwoUserId 查询信件
 func QueryLetterByTwoUserId(c *gin.Context) {
-	userAId, _ := strconv.Atoi(c.Param("userAId"))
-	userBId, _ := strconv.Atoi(c.Param("userBId"))
-	code, letterList := dao.QueryLetterByTwoUserId(userAId, userBId)
+	userAId, _ := strconv.Atoi(c.Param("userId1"))
+	userBId, _ := strconv.Atoi(c.Param("userId2"))
+	fmt.Println("userAId", userAId, "userBId", userBId)
+	code, letterList := dao.QueryLetterByTwoUserId(uint(userAId), uint(userBId))
 	c.JSON(http.StatusOK, gin.H{
 		"state":   code,
 		"data":    letterList,
@@ -56,6 +58,17 @@ func QueryLetterByUserId(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"state":   code,
 		"data":    letterList,
+		"message": errmsg.GetErrMsg(code),
+	})
+}
+
+// QueryLetterById 查询信件
+func QueryLetterById(c *gin.Context) {
+	id, _ := strconv.Atoi(c.Param("id"))
+	code, letter := dao.QueryLetterById(id)
+	c.JSON(http.StatusOK, gin.H{
+		"state":   code,
+		"data":    letter,
 		"message": errmsg.GetErrMsg(code),
 	})
 }

@@ -168,3 +168,19 @@ func ExamineRole(name string, role uint) bool {
 	}
 	return false
 }
+
+// GetUserName 通过用户id获取用户名
+func GetUserName(userId uint) (userName string) {
+	var user User
+	db.Where("id = ?", userId).First(&user)
+	return user.UserName
+}
+
+func GetAvatar(userId uint) (code uint, avatar string) {
+	var user User
+	db.Preload("Profile").Where("id = ?", userId).First(&user)
+	if err != nil {
+		return errmsg.DATABASE_WRITE_FAIL, ""
+	}
+	return errmsg.SUCCESS, user.Profile.Avatar
+}
