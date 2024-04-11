@@ -25,6 +25,7 @@ func AddTaskComment(c *gin.Context) {
 func EditTaskComment(c *gin.Context) {
 	var taskComment model.TaskComment
 	_ = c.ShouldBindJSON(&taskComment)
+	fmt.Println("EditTaskComment", taskComment)
 	code := dao.EditTaskComment(&taskComment)
 	c.JSON(200, gin.H{
 		"state":   code,

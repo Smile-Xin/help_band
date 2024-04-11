@@ -3,11 +3,13 @@ package dao
 import (
 	"backend/model"
 	"backend/utils/errmsg"
+	"fmt"
 )
 
 // ExistTaskCommentByID 判断任务评论是否存在
 func ExistTaskCommentByID(id int) bool {
 	result := db.Where("id = ?", id).Find(&model.TaskComment{})
+	fmt.Println("result.RowsAffected", result.RowsAffected)
 	if result.RowsAffected == 0 {
 		return false
 	} else {
@@ -33,10 +35,6 @@ func EditTaskComment(taskComment *model.TaskComment) (code uint) {
 	// 判断评论是否存在
 	if ExistTaskCommentByID(int(taskComment.ID)) {
 		// 存在
-		// 判断更新的评论的文章是否存在
-		if !ExistTaskById(taskComment.TaskId) {
-			return errmsg.TASK_NOT_EXIST
-		}
 		err := db.Model(&model.TaskComment{}).Where("id = ?", taskComment.ID).Updates(&taskComment).Error
 		if err != nil {
 			return errmsg.DATABASE_WRITE_FAIL
@@ -64,14 +62,14 @@ func DeleteTaskComment(id int) (code uint) {
 
 //	QueryTaskCommentByTaskID 根据taskID查询评论
 func QueryTaskCommentByTaskID(taskID int) (taskComment model.TaskComment, code uint) {
-	result := db.Where("task_id = ?", taskID).Find(&taskComment)
+	result := db.Where("task_id = ? and status != ?", taskID, -1).Find(&taskComment)
 	if result.Error != nil {
 		return taskComment, errmsg.DATABASE_WRITE_FAIL
 	}
 	// 判断是否存在
-	if result.RowsAffected == 0 {
-		return taskComment, errmsg.TASK_COMMENT_NOT_EXIST
-	}
+	//if result.RowsAffected == 0 {
+	//	return taskComment, errmsg.TASK_COMMENT_NOT_EXIST
+	//}
 	return taskComment, errmsg.SUCCESS
 }
 

@@ -80,7 +80,7 @@ func GetAll(pageSize int, pageNum int) (taskList []model.Task, total int64, code
 
 // QueryTaskByID 根据id查询任务
 func QueryTaskByID(id int) (task model.Task, code uint) {
-	if ExistTaskCommentByID(id) {
+	if !ExistTaskById(uint(id)) {
 		code = errmsg.TASK_NOT_EXIST
 		return
 	}

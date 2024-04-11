@@ -4,6 +4,7 @@ import (
 	"backend/dao"
 	"backend/model"
 	"backend/utils/errmsg"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"strconv"
 )
@@ -42,6 +43,7 @@ func GetAll(c *gin.Context) {
 // QueryTaskByID 根据id查询任务
 func QueryTaskByID(c *gin.Context) {
 	id, _ := strconv.Atoi(c.Param("id"))
+	fmt.Println("query task id", id)
 	task, code := dao.QueryTaskByID(id)
 	c.JSON(200, gin.H{
 		"state":   code,
