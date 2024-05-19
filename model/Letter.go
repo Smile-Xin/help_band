@@ -8,6 +8,8 @@ import (
 type Letter struct {
 	ID         uint   `gorm:"primaryKey" json:"id"`
 	UserA_id   uint   `gorm:"type:int;not null" json:"userA_id"`
+	UserA      User   `gorm:"foreignKey:UserA_id" json:"userA"`
+	UserB      User   `gorm:"foreignKey:UserB_id" json:"userB"`
 	UserB_id   uint   `gorm:"type:int;not null" json:"userB_id"`
 	UserA_name string `gorm:"type:varchar(64)" json:"userA_name"`
 	UserB_name string `gorm:"type:varchar(64)" json:"userB_name"`

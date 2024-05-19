@@ -60,7 +60,6 @@ func InitDb() {
 		&model.Task{},
 		&model.TaskComment{},
 		&model.Article{},
-		&model.Category{},
 		&model.Profile{},
 		&model.Message{},
 		&model.Letter{},

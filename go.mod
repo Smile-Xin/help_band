@@ -15,7 +15,11 @@ require (
 )
 
 require (
-	golang.org/x/sync v0.0.0-20220722155255-886fb9371eb4 // indirect
+	github.com/fogleman/gg v1.3.0 // indirect
+	github.com/golang/freetype v0.0.0-20170609003504-e2365dfdc4a0 // indirect
+	github.com/mriceman/go-uml v0.2.0 // indirect
+	golang.org/x/image v0.7.0 // indirect
+	golang.org/x/sync v0.1.0 // indirect
 	golang.org/x/time v0.5.0 // indirect
 )
 
@@ -39,7 +43,7 @@ require (
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
 	github.com/pelletier/go-toml/v2 v2.2.0 // indirect
-	github.com/qiniu/go-sdk/v7 v7.19.0
+	github.com/qiniu/go-sdk/v7 v7.19.1
 	github.com/twitchyliquid64/golang-asm v0.15.1 // indirect
 	github.com/ugorji/go/codec v1.2.12 // indirect
 	golang.org/x/arch v0.7.0 // indirect

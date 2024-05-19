@@ -49,8 +49,8 @@ func InitRouter() {
 		group1.GET("article/list", v1.QueryArtList)
 		group1.GET("article/get", v1.GetArticle)
 		// category业务
-		group1.GET("category/get", v1.GetCategory)
-		group1.GET("category/query", v1.QueryCategory)
+		//group1.GET("category/get", v1.GetCategory)
+		//group1.GET("category/query", v1.QueryCategory)
 	}
 	group2 := router.Group("api/v1", middleware.JwtToken())
 	{
@@ -92,9 +92,9 @@ func InitRouter() {
 		// category业务
 		//auth.GET("category/get", v1.GetCategory)
 		//auth.GET("category/query", v1.QueryCategory)
-		group2.POST("category/add", v1.AddCategory)
-		group2.POST("category/edit", v1.EditCategory)
-		group2.DELETE("category/delete", v1.DeleteCategory)
+		//group2.POST("category/add", v1.AddCategory)
+		//group2.POST("category/edit", v1.EditCategory)
+		//group2.DELETE("category/delete", v1.DeleteCategory)
 
 		// profile 业务
 		//auth.GET("profile/:id", v1.GetProfile)

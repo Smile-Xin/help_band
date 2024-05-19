@@ -20,7 +20,7 @@ func AddArticle(article model.Article) (code uint) {
 
 func QueryArticle(id int) (code uint, article model.Article) {
 	// 操作数据库
-	result := db.Preload("Category").Preload("User").Where("id = ?", id).Find(&article)
+	result := db.Preload("User").Where("id = ?", id).Find(&article)
 	// 查询时的错误
 	if result.Error != nil {
 		code = errmsg.DATABASE_WRITE_FAIL
@@ -43,9 +43,9 @@ func QueryArtList(title string, cid int, pageSize int, pageNum int) (articleList
 	}
 	if title != "" {
 		// 符合的文章数
-		db.Where("title like ? and cid = ?", "%"+title+"%", cid).Find(&articleList).Count(&total)
+		db.Where("title like ?", "%"+title+"%").Find(&articleList).Count(&total)
 		// 按照title查找文章
-		err := db.Where("title like ? and cid = ?", "%"+title+"%", cid).Limit(pageSize).Offset((pageNum - 1) * pageNum).Find(&articleList).Error
+		err := db.Where("title like ?", "%"+title+"%").Limit(pageSize).Offset((pageNum - 1) * pageNum).Find(&articleList).Error
 		if err != nil {
 			fmt.Printf("get article fail:%s", err)
 			code = errmsg.DATABASE_WRITE_FAIL
@@ -54,9 +54,9 @@ func QueryArtList(title string, cid int, pageSize int, pageNum int) (articleList
 		code = errmsg.SUCCESS
 	} else {
 		// 查询全部文章数
-		db.Where("cid = ?", cid).Find(&articleList).Count(&total)
+		db.Find(&articleList).Count(&total)
 		// 查询全部文章
-		err := db.Where("cid = ?", cid).Preload("Category").Preload("User").Limit(pageSize).Offset((pageNum - 1) * pageSize).Find(&articleList).Error
+		err := db.Preload("User").Limit(pageSize).Offset((pageNum - 1) * pageSize).Find(&articleList).Error
 		if err != nil {
 			fmt.Printf("get article fail:%s", err)
 			code = errmsg.DATABASE_WRITE_FAIL
@@ -76,7 +76,7 @@ func GetArticle(title string, pageSize int, pageNum int) (articleList []model.Ar
 		// 符合的文章数
 		db.Where("title like ?", "%"+title+"%").Find(&articleList).Count(&total)
 		// 按照title查找文章
-		err := db.Preload("Category").Preload("User").Where("title like ?", "%"+title+"%").Limit(pageSize).Offset((pageNum - 1) * pageNum).Find(&articleList).Error
+		err := db.Preload("User").Where("title like ?", "%"+title+"%").Limit(pageSize).Offset((pageNum - 1) * pageNum).Find(&articleList).Error
 		if err != nil {
 			fmt.Printf("get article fail:%s", err)
 			code = errmsg.DATABASE_WRITE_FAIL
@@ -87,7 +87,7 @@ func GetArticle(title string, pageSize int, pageNum int) (articleList []model.Ar
 		// 查询全部文章数
 		db.Find(&articleList).Count(&total)
 		// 查询全部文章
-		err := db.Preload("Category").Preload("User").Limit(pageSize).Offset((pageNum - 1) * pageSize).Find(&articleList).Error
+		err := db.Preload("User").Limit(pageSize).Offset((pageNum - 1) * pageSize).Find(&articleList).Error
 		if err != nil {
 			fmt.Printf("get article fail:%s", err)
 			code = errmsg.DATABASE_WRITE_FAIL
@@ -110,7 +110,6 @@ func EditArticle(article model.Article) (code uint) {
 
 	result := db.Model(&article).Updates(map[string]interface{}{
 		"title":   article.Title,
-		"cid":     article.Cid,
 		"desc":    article.Desc,
 		"content": article.Content,
 		"img":     article.Img,

@@ -12,6 +12,7 @@ type User struct {
 	Role     uint    `gorm:"type:int" json:"role"`
 	Score    float64 `gorm:"type:float" json:"score"` // 用户评分
 	Pid      int     `gorm:"type:int" json:"pid"`     // 用户信息表id
+	Bidders  []Task  `gorm:"many2many:task_bidder;foreignKey:UserName" json:"bidders"`
 	Profile  Profile `gorm:"foreignKey:Pid"`
 }
 
